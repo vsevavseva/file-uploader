@@ -1,4 +1,4 @@
-import {message, Upload, UploadProps} from "antd";
+import {message, Upload, UploadFile, UploadProps} from "antd";
 import {parseBlob} from "music-metadata";
 import {useState} from "react";
 import {FileMeta} from "../types";
@@ -11,17 +11,18 @@ export const useFileUploader = () => {
         multiple: true,
         accept: 'audio/*',
         onChange: async (info) => {
-            // setFiles(info.fileList.map(el => el.originFileObj as unknown as Blob).filter(Boolean))
+            console.log('onChange: ', info)
+            if (info.fileList?.length === 0) setFiles([]);
         },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
-        onRemove: (file) => {
-            const index = files.findIndex(elem => JSON.stringify(elem.source) === JSON.stringify(file.originFileObj));
-            const newFiles = files.slice();
-            newFiles.splice(index, 1);
-            setFiles(newFiles);
-        },
+        // onRemove: (file) => {
+        //     const index = files.findIndex(elem => JSON.stringify(elem.source) === JSON.stringify(file.originFileObj));
+        //     const newFiles = files.slice();
+        //     newFiles.splice(index, 1);
+        //     setFiles(newFiles);
+        // },
         beforeUpload: async (file: File) => {
             try {
                 if (!file.type.startsWith('audio/')) {
@@ -57,7 +58,10 @@ export const useFileUploader = () => {
         customRequest({onSuccess}) {
             setTimeout(() => onSuccess && onSuccess("ok"), 0);
         },
+        fileList: files as never as UploadFile[],
+        showUploadList: false,
     };
 
-    return {uploadProps, files};
+
+    return {uploadProps, files, setFiles};
 }

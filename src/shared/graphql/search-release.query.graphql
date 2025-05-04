@@ -1,0 +1,13 @@
+query getReleases($input: SearchInput!) {
+    searchReleases(input: $input) {
+        total
+        page
+        pages
+        results {
+            title
+            country
+            year
+            format
+        }
+    }
+}
