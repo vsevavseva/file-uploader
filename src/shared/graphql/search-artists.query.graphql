@@ -1,0 +1,10 @@
+query getArtist($input: SearchInput!) {
+    searchArtists(input: $input) {
+        total
+        page
+        pages
+        results {
+            title
+        }
+    }
+}

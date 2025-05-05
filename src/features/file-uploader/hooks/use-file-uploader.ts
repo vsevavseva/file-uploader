@@ -1,7 +1,7 @@
-import {message, Upload, UploadProps} from "antd";
+import {message, Upload, UploadFile, UploadProps} from "antd";
 import {parseBlob} from "music-metadata";
 import {useState} from "react";
-import {FileMeta} from "features/file-uploader/types";
+import {FileMeta} from "../types";
 
 export const useFileUploader = () => {
     const [files, setFiles] = useState<Array<FileMeta>>([]);
@@ -11,25 +11,24 @@ export const useFileUploader = () => {
         multiple: true,
         accept: 'audio/*',
         onChange: async (info) => {
-            // setFiles(info.fileList.map(el => el.originFileObj as unknown as Blob).filter(Boolean))
+            console.log('onChange: ', info)
+            if (info.fileList?.length === 0) setFiles([]);
         },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
-        onRemove: (file) => {
-            debugger
-            const index = files.findIndex(elem => JSON.stringify(elem.source) === JSON.stringify(file.originFileObj));
-            const newFiles = files.slice();
-            newFiles.splice(index, 1);
-            setFiles(newFiles);
-        },
+        // onRemove: (file) => {
+        //     const index = files.findIndex(elem => JSON.stringify(elem.source) === JSON.stringify(file.originFileObj));
+        //     const newFiles = files.slice();
+        //     newFiles.splice(index, 1);
+        //     setFiles(newFiles);
+        // },
         beforeUpload: async (file: File) => {
             try {
                 if (!file.type.startsWith('audio/')) {
                     message.error(`Файл "${file.name}" не является аудиофайлом`);
                     return Upload.LIST_IGNORE;
                 }
-                debugger
 
                 const data = await parseBlob(file as unknown as Blob);
                 const {title = '', album = '', artist = '', picture} = data.common;
@@ -59,7 +58,10 @@ export const useFileUploader = () => {
         customRequest({onSuccess}) {
             setTimeout(() => onSuccess && onSuccess("ok"), 0);
         },
+        fileList: files as never as UploadFile[],
+        showUploadList: false,
     };
 
-    return {uploadProps, files};
+
+    return {uploadProps, files, setFiles};
 }
