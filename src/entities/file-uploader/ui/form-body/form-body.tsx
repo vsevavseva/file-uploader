@@ -1,29 +1,24 @@
 import {Card, Form, Image, Input} from "antd";
 import {FileMeta} from "features/file-uploader/types";
 import {FormBodyTitle} from "entities/file-uploader";
-import useFormInstance from "antd/es/form/hooks/useFormInstance";
 import {AutocompleteRelease} from "features/file-uploader/ui/autocomplete-release.tsx";
 import {AutocompleteArtist} from "features/file-uploader/ui/autocomplete-artist.tsx";
 
 type FormItemProps = {
     track: FileMeta;
     name: number;
-    setFiles: (files: FileMeta[]) => void;
+    onDeleteFile: (file: FileMeta) => void;
 }
 
-export const FormBody = ({track, name, setFiles}: FormItemProps) => {
-    const form = useFormInstance();
-    const onDeleteFile = () => {
-        console.log(track)
-        const allTracks = form.getFieldValue('tracks') as Array<FileMeta>;
-        setFiles(allTracks.filter(currTrack => currTrack !== track));
-        // console.log(allTracks, track)
+export const FormBody = ({track, name, onDeleteFile}: FormItemProps) => {
+    const onDelete = () => {
+        onDeleteFile(track);
     };
 
     return (
         <Card
             key={name}
-            title={<FormBodyTitle title={track.title} onDelete={onDeleteFile} />}
+            title={<FormBodyTitle title={track.title} onDelete={onDelete} />}
             cover={track.pictureUrl ? (
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Image

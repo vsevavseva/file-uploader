@@ -1,34 +1,34 @@
-import {useEffect} from 'react';
-import {Button, Form, Space} from 'antd';
+import {Button, Form, FormInstance, Space} from 'antd';
 import {FileMeta} from "features/file-uploader/types";
-import {useForm} from "shared/hooks";
 import {FormBody} from "entities/file-uploader/ui/form-body";
 
 type FormProps = {
     tracks: FileMeta[];
-    setFiles: (p: never[]) => void;
+    onTrackAdded: unknown;
+    form: FormInstance;
+    disabled: boolean;
+    onValuesChange: () => void;
+    resetForm: () => void;
+
 }
 
-const UploadForm = ({tracks, setFiles}: FormProps) => {
-    const {
-        form,
-        disabled,
-        onValuesChange,
-        resetForm,
-    } = useForm<FormProps>({});
-
+const UploadForm = ({
+                        tracks, form,
+                        disabled,
+                        onValuesChange,
+                        resetForm
+                    }: FormProps) => {
     // const {upload} = useUploadFiles();
-
-    useEffect(() => {
-        form.setFieldsValue({"tracks": tracks});
-        onValuesChange();
-    }, [tracks])
 
     const handleFinish = async (values: { tracks: FileMeta[] }) => {
         // await upload(values.tracks);
         alert(JSON.stringify(values.tracks));
-        setFiles([]);
         resetForm();
+    };
+
+    const onDeleteFile = (file: FileMeta) => {
+        const allTracks = form.getFieldValue('tracks') as Array<FileMeta>;
+        form.setFieldValue('tracks', allTracks.filter(currTrack => currTrack !== file));
     };
 
     return <Form
@@ -44,7 +44,7 @@ const UploadForm = ({tracks, setFiles}: FormProps) => {
                 <Space direction="vertical" size="large" style={{width: '100%'}}>
                     {fields.map(({key, name}) => {
                         const track = form.getFieldValue(['tracks', name]) || {};
-                        return <FormBody key={key} track={track} name={name} setFiles={setFiles}/>
+                        return <FormBody key={key} track={track} name={name} onDeleteFile={onDeleteFile}/>
                     })}
                 </Space>
             )}

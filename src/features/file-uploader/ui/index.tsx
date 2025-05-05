@@ -1,16 +1,42 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {InboxOutlined} from '@ant-design/icons';
 import {Upload} from 'antd';
 import {useFileUploader} from "features/file-uploader/hooks";
 import UploadForm from "features/file-uploader/ui/form.tsx";
+import {FileMeta} from "features/file-uploader/types";
+import {useForm} from "shared/hooks";
 
 const {Dragger} = Upload;
 
+type FormProps = {
+    tracks: FileMeta[];
+    onTrackAdded: unknown;
+}
+
 export const FileUploader: React.FC = () => {
-    const {uploadProps, files, setFiles} = useFileUploader();
+    const {uploadProps, subscribe} = useFileUploader();
+    const {
+        form,
+        disabled,
+        onValuesChange,
+        resetForm,
+    } = useForm<FormProps>({});
+
+    useEffect(() => {
+        const callback = (event: CustomEvent<FileMeta>) => {
+            const currTracks = form.getFieldValue('tracks');
+            currTracks.push(event.detail);
+            form.setFieldValue('tracks', currTracks);
+            onValuesChange();
+        }
+        const unsubscribe = subscribe(callback);
+        return () => {
+            unsubscribe?.();
+        };
+    }, [subscribe])
 
     return (
-        <div style={{padding:'20px'}}>
+        <div style={{padding: '20px'}}>
             <Dragger {...uploadProps}>
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined/>
@@ -22,7 +48,13 @@ export const FileUploader: React.FC = () => {
                 </p>
             </Dragger>
 
-            <UploadForm tracks={files} setFiles={setFiles}/>
+            <UploadForm tracks={[]}
+                        onTrackAdded={subscribe}
+                        form={form}
+                        disabled={disabled}
+                        onValuesChange={onValuesChange}
+                        resetForm={resetForm}
+            />
         </div>
     )
 };

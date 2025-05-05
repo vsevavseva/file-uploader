@@ -1,28 +1,23 @@
-import {message, Upload, UploadFile, UploadProps} from "antd";
+import {message, Upload, UploadProps} from "antd";
 import {parseBlob} from "music-metadata";
-import {useState} from "react";
-import {FileMeta} from "../types";
+import {useCallback, useRef} from "react";
+import {SourceManager, FileManagerHandler} from "shared/utils/source-manager.ts";
+import {FileMeta} from "features/file-uploader/types";
 
 export const useFileUploader = () => {
-    const [files, setFiles] = useState<Array<FileMeta>>([]);
+    const fileManager = useRef(SourceManager<FileMeta>()).current;
+
+    const subscribe = useCallback((callback: FileManagerHandler<FileMeta>) => {
+        return fileManager.addListener('addFile', callback);
+    }, [fileManager])
 
     const uploadProps: UploadProps = {
         name: 'file',
         multiple: true,
         accept: 'audio/*',
-        onChange: async (info) => {
-            console.log('onChange: ', info)
-            if (info.fileList?.length === 0) setFiles([]);
-        },
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
-        // onRemove: (file) => {
-        //     const index = files.findIndex(elem => JSON.stringify(elem.source) === JSON.stringify(file.originFileObj));
-        //     const newFiles = files.slice();
-        //     newFiles.splice(index, 1);
-        //     setFiles(newFiles);
-        // },
         beforeUpload: async (file: File) => {
             try {
                 if (!file.type.startsWith('audio/')) {
@@ -47,7 +42,7 @@ export const useFileUploader = () => {
                     pictureUrl
                 };
 
-                setFiles(prev => [...prev, newFile])
+                fileManager.emit('addFile', newFile);
             } catch (err) {
                 console.error(err);
                 message.error(`Ошибка при чтении "${file.name}"`);
@@ -58,10 +53,10 @@ export const useFileUploader = () => {
         customRequest({onSuccess}) {
             setTimeout(() => onSuccess && onSuccess("ok"), 0);
         },
-        fileList: files as never as UploadFile[],
+        // fileList: files as never as UploadFile[],
         showUploadList: false,
     };
 
 
-    return {uploadProps, files, setFiles};
+    return {uploadProps, subscribe};
 }
