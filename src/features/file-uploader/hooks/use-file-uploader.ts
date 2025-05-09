@@ -1,13 +1,13 @@
 import {message, Upload, UploadProps} from "antd";
 import {parseBlob} from "music-metadata";
 import {useCallback, useRef} from "react";
-import {SourceManager, FileManagerHandler} from "shared/utils/source-manager.ts";
+import {SourceManager, SourceManagerHandler} from "shared/utils/source-manager.ts";
 import {FileMeta} from "features/file-uploader/types";
 
 export const useFileUploader = () => {
     const fileManager = useRef(SourceManager<FileMeta>()).current;
 
-    const subscribe = useCallback((callback: FileManagerHandler<FileMeta>) => {
+    const subscribe = useCallback((callback: SourceManagerHandler<FileMeta>) => {
         return fileManager.addListener('addFile', callback);
     }, [fileManager])
 
@@ -53,7 +53,6 @@ export const useFileUploader = () => {
         customRequest({onSuccess}) {
             setTimeout(() => onSuccess && onSuccess("ok"), 0);
         },
-        // fileList: files as never as UploadFile[],
         showUploadList: false,
     };
 
