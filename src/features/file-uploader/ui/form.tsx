@@ -1,29 +1,28 @@
-import {Button, Form, FormInstance, Space} from 'antd';
+import {Button, Form, FormInstance, message, Space} from 'antd';
 import {FileMeta} from "features/file-uploader/types";
 import {FormBody} from "entities/file-uploader/ui/form-body";
+import {useUploadFiles} from "features/file-uploader/hooks";
 
 type FormProps = {
-    tracks: FileMeta[];
-    onTrackAdded: unknown;
     form: FormInstance;
     disabled: boolean;
     onValuesChange: () => void;
-    resetForm: () => void;
-
+    resetForm: (params: { resetDisabled: boolean; resetDirty?: boolean }) => void;
 }
 
 const UploadForm = ({
-                        tracks, form,
+                        form,
                         disabled,
                         onValuesChange,
                         resetForm
                     }: FormProps) => {
-    // const {upload} = useUploadFiles();
+    const {upload} = useUploadFiles();
 
     const handleFinish = async (values: { tracks: FileMeta[] }) => {
-        // await upload(values.tracks);
-        alert(JSON.stringify(values.tracks));
-        resetForm();
+        await upload(values.tracks, (progress, fileIndex) => {
+            message.success(`File ${fileIndex + 1}: ${progress}% uploaded`);
+        });
+        resetForm({resetDisabled: true });
     };
 
     const onDeleteFile = (file: FileMeta) => {
@@ -35,7 +34,7 @@ const UploadForm = ({
         form={form}
         onValuesChange={onValuesChange}
         layout="vertical"
-        initialValues={{tracks}}
+        initialValues={{tracks: []}}
         onFinish={handleFinish}
         style={{marginTop: 32}}
     >
@@ -50,7 +49,7 @@ const UploadForm = ({
             )}
         </Form.List>
 
-        {tracks.length ? <Form.Item style={{marginTop: 24}}>
+        {!disabled ? <Form.Item style={{marginTop: 24}}>
             <Button disabled={disabled} type="primary" htmlType="submit">
                 Отправить
             </Button>

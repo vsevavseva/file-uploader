@@ -48,12 +48,11 @@ export const FileUploader: React.FC = () => {
                 </p>
             </Dragger>
 
-            <UploadForm tracks={[]}
-                        onTrackAdded={subscribe}
-                        form={form}
-                        disabled={disabled}
-                        onValuesChange={onValuesChange}
-                        resetForm={resetForm}
+            <UploadForm
+                form={form}
+                disabled={disabled}
+                onValuesChange={onValuesChange}
+                resetForm={resetForm}
             />
         </div>
     )

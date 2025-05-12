@@ -18,6 +18,11 @@ export default defineConfig({
                 target: 'http://188.225.32.102:3000',
                 changeOrigin: true,
                 secure: false,
+            },
+            '/upload': {
+                target: 'http://localhost:3000',
+                changeOrigin: true,
+                secure: false,
             }
         }
     }
