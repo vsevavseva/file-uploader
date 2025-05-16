@@ -1,12 +1,12 @@
-import { Form } from 'antd';
-import { useState } from 'react';
+import {Form} from 'antd';
+import {useState} from 'react';
 
 type ErrorField = {
     name: string[];
     errors: string[];
 };
 
-type FormErrors<T> = {
+export type FormErrors<T> = {
     values: T;
     errorFields: Array<ErrorField>;
     outOfDate: boolean;
@@ -18,7 +18,7 @@ type UseFormProps = {
 };
 
 /** Абстрактный хук, расширяющий useForm из antd функционал валидации */
-export function useForm<T>({ defaultDirty = false, defaultDisabled = true }: UseFormProps) {
+export function useForm<T>({defaultDirty = false, defaultDisabled = true}: UseFormProps) {
     const [form] = Form.useForm<T>();
     const [disabled, setDisabled] = useState(defaultDisabled);
     const [dirty, setDirty] = useState(defaultDirty);
@@ -30,7 +30,7 @@ export function useForm<T>({ defaultDirty = false, defaultDisabled = true }: Use
         }
 
         form
-            .validateFields({ validateOnly: true })
+            .validateFields({validateOnly: true})
             .then(() => {
                 setDisabled(false)
             })
@@ -43,7 +43,7 @@ export function useForm<T>({ defaultDirty = false, defaultDisabled = true }: Use
     };
 
     const resetForm = (
-        params: { resetDisabled: boolean; resetDirty: boolean } = {
+        params: Partial<{ resetDisabled: boolean; resetDirty: boolean }> = {
             resetDisabled: false,
             resetDirty: true,
         },

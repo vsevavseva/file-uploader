@@ -1,9 +1,6 @@
 import {FileMeta} from "features/file-uploader/types";
 import axios, {AxiosProgressEvent} from 'axios';
 
-// todo загружать из массива файлов каждый файл отдельно
-// todo достать прогресс загрузки из запроса
-
 export const useUploadFiles = () => {
     const upload = async (
         tracks: Array<Omit<FileMeta, 'pictureUrl'>>,
@@ -18,7 +15,7 @@ export const useUploadFiles = () => {
             formData.append('title', title);
 
             try {
-                await axios.post('http://localhost:5190/upload', formData, {
+                await axios.post('http://localhost:5189/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

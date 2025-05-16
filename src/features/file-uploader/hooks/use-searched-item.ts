@@ -1,6 +1,10 @@
 import {useCallback, useRef, useState} from "react";
 import {debounce} from "lodash";
-import {ReleaseItem, useGetArtistLazyQuery, useGetReleasesLazyQuery} from "../../../../__generated__/graphql.ts";
+import {
+    ReleaseItem,
+    useGetArtistLazyQuery,
+    useGetReleasesLazyQuery
+} from "../../../__generated__/graphql.ts";
 
 type SearchType = 'artist' | 'release';
 
@@ -26,6 +30,7 @@ export const useSearchedItem = (type: SearchType) => {
             }
         });
 
+        //todo fix types
         const data = type === 'artist'
             ? result?.data?.searchArtists?.results
             : result?.data?.searchReleases?.results;

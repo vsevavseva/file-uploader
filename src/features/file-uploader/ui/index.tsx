@@ -1,17 +1,14 @@
 import React, {useEffect} from 'react';
 import {InboxOutlined} from '@ant-design/icons';
 import {Upload} from 'antd';
-import {useFileUploader} from "features/file-uploader/hooks";
-import UploadForm from "features/file-uploader/ui/form.tsx";
-import {FileMeta} from "features/file-uploader/types";
+
 import {useForm} from "shared/hooks";
 
-const {Dragger} = Upload;
+import {useFileUploader} from "../hooks";
+import UploadForm from "./form";
+import {FileMeta, UploadFormType} from "../types";
 
-type FormProps = {
-    tracks: FileMeta[];
-    onTrackAdded: unknown;
-}
+const {Dragger} = Upload;
 
 export const FileUploader: React.FC = () => {
     const {uploadProps, subscribe} = useFileUploader();
@@ -20,7 +17,8 @@ export const FileUploader: React.FC = () => {
         disabled,
         onValuesChange,
         resetForm,
-    } = useForm<FormProps>({});
+        errors
+    } = useForm<UploadFormType>({});
 
     useEffect(() => {
         const callback = (event: CustomEvent<FileMeta>) => {
@@ -28,6 +26,8 @@ export const FileUploader: React.FC = () => {
             currTracks.push(event.detail);
             form.setFieldValue('tracks', currTracks);
             onValuesChange();
+            console.log(form.getFieldValue('tracks'))
+
         }
         const unsubscribe = subscribe(callback);
         return () => {
@@ -53,6 +53,7 @@ export const FileUploader: React.FC = () => {
                 disabled={disabled}
                 onValuesChange={onValuesChange}
                 resetForm={resetForm}
+                errors={errors}
             />
         </div>
     )

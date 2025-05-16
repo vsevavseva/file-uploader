@@ -1,5 +1,5 @@
 import {AutoComplete, Form} from "antd";
-import {useSearchedItem} from "./hooks";
+import {useSearchedItem} from "../hooks";
 
 type AutocompleteReleaseProps = {
     name: number;

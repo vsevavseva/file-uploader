@@ -23,6 +23,11 @@ export default defineConfig({
                 target: 'http://localhost:3000',
                 changeOrigin: true,
                 secure: false,
+            },
+            '/check-file': {
+                target: 'http://localhost:3000',
+                changeOrigin: true,
+                secure: false,
             }
         }
     }

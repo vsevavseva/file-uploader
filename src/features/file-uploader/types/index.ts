@@ -3,5 +3,10 @@ export type FileMeta = {
     title: string;
     album: string;
     author: string;
+    alreadyExist: boolean;
     pictureUrl: string | undefined;
+}
+
+export type UploadFormType = {
+    tracks: FileMeta[];
 }

@@ -39,6 +39,7 @@ export const useFileUploader = () => {
                     title,
                     album,
                     author: artist,
+                    alreadyExist: false,
                     pictureUrl
                 };
 
