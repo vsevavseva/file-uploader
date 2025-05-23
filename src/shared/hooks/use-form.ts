@@ -36,7 +36,6 @@ export function useForm<T>({defaultDirty = false, defaultDisabled = true}: UseFo
             })
             .catch((errorInfo: FormErrors<T>) => {
                 const disabled = Boolean(errorInfo.errorFields.length);
-                console.log(errorInfo)
                 setDisabled(disabled);
                 setErrors(errorInfo);
             });

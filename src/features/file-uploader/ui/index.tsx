@@ -26,7 +26,6 @@ export const FileUploader: React.FC = () => {
             currTracks.push(event.detail);
             form.setFieldValue('tracks', currTracks);
             onValuesChange();
-            console.log(form.getFieldValue('tracks'))
 
         }
         const unsubscribe = subscribe(callback);

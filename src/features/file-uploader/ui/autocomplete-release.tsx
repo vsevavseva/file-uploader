@@ -1,12 +1,12 @@
 import {AutoComplete, Form} from "antd";
-import {useSearchedItem} from "../hooks";
+import {SearchType, useSearchedItem} from "../hooks";
 
 type AutocompleteReleaseProps = {
     name: number;
 }
 
 export const AutocompleteRelease = ({name}: AutocompleteReleaseProps) => {
-    const {options, onSearch} = useSearchedItem('release');
+    const {options, onSearch} = useSearchedItem(SearchType.Release);
 
     return <Form.Item
         label="Альбом"

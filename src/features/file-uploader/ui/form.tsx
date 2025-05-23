@@ -1,10 +1,10 @@
 import {Button, Form, FormInstance, message, Space} from 'antd';
 
 import {FormErrors} from "shared/hooks";
-import {FormBody} from "entities/file-uploader/ui/form-body";
 
 import {FileMeta, UploadFormType} from "../types";
 import {useUploadFiles} from "../hooks";
+import {FormBody} from "entities/file-uploader/ui/form-body";
 
 type FormProps = {
     form: FormInstance;
@@ -44,13 +44,7 @@ const UploadForm = ({
         onFinish={handleFinish}
         style={{marginTop: 32}}
     >
-        <Form.List name="tracks" rules={[
-            {
-                validator: async (_, tracks) => {
-                    console.log(_, tracks)
-                },
-            }
-        ]}>
+        <Form.List name="tracks">
             {(fields) => (
                 <Space direction="vertical" size="large" style={{width: '100%'}}>
                     {fields.map(({key, name}) => {

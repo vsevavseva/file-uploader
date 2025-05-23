@@ -16,7 +16,7 @@ export const FileExistRule = (index: number): Rule => {
                 exists: boolean
             }>(`/check-file?path=${path}`, {});
 
-            if (response.exists) {
+            if (!response.exists) {
                 setFieldValue(['tracks', index, 'alreadyExist'], false);
                 return Promise.resolve();
             }
